@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"thaYt/Goverlay/src/printer"
 	"thaYt/Goverlay/src/utils"
 	"time"
@@ -41,6 +42,11 @@ func CheckForUpdates(doUpdate bool) {
 	v, err := gabs.ParseJSON(ww)
 	if err != nil {
 		printer.SetStatus("Could not get update info. " + err.Error())
+		time.Sleep(time.Millisecond * 250)
+		return
+	}
+	if !strings.Contains(v.Path("message").Data().(string), "null") {
+		printer.SetStatus("API rate limit exceeded. Cannot check for updates.")
 		time.Sleep(time.Millisecond * 250)
 		return
 	}
