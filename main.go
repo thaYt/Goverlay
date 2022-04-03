@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	utils.Version = "0.3 dev"
+	utils.Version = "0.4"
 	update.CheckForUpdates(false)
 	config.GetConfig()
 	go event.KeyPressEvent()

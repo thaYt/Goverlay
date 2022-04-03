@@ -124,6 +124,6 @@ func SetTitle(title string) (int, error) { // From https://github.com/lxi1400/Go
 		return 0, err
 	}
 	e, _ := syscall.UTF16PtrFromString(title)
-	r, _, err := syscall.SyscallN(proc, 1, uintptr(unsafe.Pointer(e)), 0, 0)
+	r, _, err := syscall.Syscall(proc, 1, uintptr(unsafe.Pointer(e)), 0, 0)
 	return int(r), err
 }

@@ -18,7 +18,7 @@ func CheckForUpdates(doUpdate bool) {
 		if err != nil {
 		}
 	}()
-	var cVer, err = strconv.ParseFloat(utils.Version[:2], 64)
+	var cVer, err = strconv.ParseFloat(utils.Version[:3], 64)
 	if err != nil {
 		printer.SetStatus("Error parsing version number: " + err.Error())
 		time.Sleep(time.Millisecond * 250)
@@ -44,23 +44,16 @@ func CheckForUpdates(doUpdate bool) {
 		time.Sleep(time.Millisecond * 250)
 		return
 	}
-	printer.SetStatus("Update found.")
-
-	if !doUpdate {
-		return
-	}
 	version := v.Path("tag_name").Data().(string)
-	wVer, err := strconv.ParseFloat(version[1:len(version)-2], 64)
+	wVer, err := strconv.ParseFloat(version, 64)
 	if err != nil {
 		printer.SetStatus("Error parsing version number: " + strconv.FormatFloat(wVer, 'f', -1, 64) + " " + err.Error())
 		time.Sleep(time.Millisecond * 250)
 		return
 	}
 	if wVer > cVer {
-		printer.SetStatus("Update found! Please update to version" + version)
-		if err != nil {
-			printer.SetStatus("Error parsing version number: " + err.Error())
-			time.Sleep(time.Millisecond * 250)
+		printer.SetStatus("Update found! Please update to version " + version + ".")
+		if !doUpdate {
 			return
 		}
 		printer.SetStatus("Downloading Update")
@@ -86,5 +79,9 @@ func CheckForUpdates(doUpdate bool) {
 			return
 		}
 		printer.SetStatus("Please restart the program to complete the update.")
+		return
+	}
+	if doUpdate {
+		printer.SetStatus("No updates found.")
 	}
 }

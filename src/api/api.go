@@ -42,9 +42,7 @@ func GetHypixelData(name string, y int) {
 			player.AddPlayer(*e)
 			return
 		}
-		p := v.Search("id").String()
-		uuid := p[1 : len(p)-1]
-
+		uuid := v.Search("id").Data().(string)
 		resp, err := http.Get("https://api.hypixel.net/player?uuid=" + uuid + "&key=" + utils.Key)
 		if err != nil {
 			e := &utils.Player{
