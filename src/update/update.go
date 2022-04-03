@@ -45,7 +45,7 @@ func CheckForUpdates(doUpdate bool) {
 		time.Sleep(time.Millisecond * 250)
 		return
 	}
-	if !strings.Contains(v.Path("message").Data().(string), "null") {
+	if !strings.Contains(v.Path("message").String(), "null") {
 		printer.SetStatus("API rate limit exceeded. Cannot check for updates.")
 		time.Sleep(time.Millisecond * 250)
 		return
