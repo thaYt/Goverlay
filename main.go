@@ -1,23 +1,26 @@
 package main
 
 import (
-	"thaYt/Goverlay/src/config"
-	"thaYt/Goverlay/src/event"
-	"thaYt/Goverlay/src/lines"
-	"thaYt/Goverlay/src/printer"
-	"thaYt/Goverlay/src/update"
-	"thaYt/Goverlay/src/utils"
+	"Goverlay/api"
+	"Goverlay/file"
+	"Goverlay/ui"
+	"time"
 )
 
-func main() {
-	utils.Version = "0.4"
-	update.CheckForUpdates(false)
-	config.GetConfig()
-	go event.KeyPressEvent()
-	go lines.InitLogFile()
-	_, err := utils.SetTitle("Goverlay " + utils.Version)
-	if err.Error() != "The operation completed successfully." {
-		printer.SetStatus("Error in setting terminal title: " + err.Error())
+func init() {
+	go ui.KeyPressEvent()
+	time.Sleep(100 * time.Millisecond)
+	if !file.FirstRun() {
+		ui.WinSetup()
 	}
-	printer.InitDraw()
+	v := file.ReadConfig()
+	b := api.CheckKey()
+	if v && b {
+		api.ValidKey = true
+	}
+}
+
+func main() {
+	go ui.Draw()
+	file.InitLogReading()
 }

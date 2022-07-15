@@ -1,4 +1,4 @@
-package colors
+package ui
 
 import "github.com/gookit/color"
 
@@ -113,23 +113,5 @@ func GetWColor(w int) color.Color {
 		return color.White
 	} else {
 		return color.Gray
-	}
-}
-
-func GetIColor(i int) *color.RGBStyle {
-	if i > 20000 {
-		return White
-	} else if i >= 10000 {
-		return DarkRed
-	} else if i >= 5000 {
-		return Red
-	} else if i >= 2500 {
-		return Gold
-	} else if i >= 1500 {
-		return Yellow
-	} else if i >= 750 {
-		return Green
-	} else {
-		return DarkGreen
 	}
 }
