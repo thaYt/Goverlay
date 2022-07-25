@@ -7,7 +7,7 @@ var (
 )
 
 const (
-	Version = 2.0
+	Version = 1.0
 )
 
 func Refresh() {

@@ -42,7 +42,7 @@ func Draw() {
 		if global.NeedRefresh {
 			screen.Clear()
 			screen.MoveTopLeft()
-			title := "┏ " + color.Bold.Render("Goverlay v2") + " ━ " + color.Green.Render(strconv.Itoa(len(api.CacheList))+" cached ")
+			title := "┏ " + color.Bold.Render("Goverlay v" + strconv.FormatFloat(global.Version, 'f', -1, 64)) + " ━ " + color.Green.Render(strconv.Itoa(len(api.CacheList))+" cached ")
 			if api.ValidKey {
 				title += "━ Key status: " + color.Bold.Render(color.Green.Render("VALID "))
 			} else {
