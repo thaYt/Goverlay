@@ -6,24 +6,18 @@ import (
 	"Goverlay/global"
 	"github.com/gookit/color"
 	"github.com/inancgumus/screen"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 )
 
 var (
-	scanInt   bool
-	selecting bool
-	status    string
-	str       string
 	clines    int
 	pw        int
 	ph        int
 	headerLen int
 	header    string
 	Selected  int
-	Enter     bool
 	Layout    = []string{
 		"-lv",
 		"-n",
@@ -131,11 +125,25 @@ func getHeaderData() {
 }
 
 func setFooter() {
-	footer := color.White.Text("┗") + strings.Repeat("━", pw-30) + " "
+	footer := color.White.Text("┗") + getType() + strings.Repeat("━", pw-40-len(getType())) + " "
+	footer += color.Gray.Text(color.OpUnderscore.Render("l")) + "ogfile ━ "
 	footer += color.Gray.Text(color.OpUnderscore.Render("c")) + "lear cache ━ "
 	footer += color.Gray.Text(color.OpUnderscore.Render("u")) + "pdate ━ "
 	footer += color.Gray.Text(color.OpUnderscore.Render("q")) + "uit"
 	color.Println(footer)
+}
+
+func getType() string {
+	if strings.Contains(file.Path, "lunarclient") {
+		return " using Lunar "
+	} else if strings.Contains(file.Path, ".minecraft") {
+		if strings.Contains(file.Path, "blclient") {
+			return " using Badlion "
+		}
+		return " using MCLauncher "
+	} else {
+		return " using ? "
+	}
 }
 
 func setPlayer(r api.Player) {
@@ -229,177 +237,4 @@ func setLoading(r api.Player) {
 		}
 	}
 	color.Println()
-}
-
-func WinSetup() {
-	finished := false
-	global.Refresh()
-	selecting = true
-	for !finished { // config directory
-		if global.NeedRefresh {
-			global.NeedRefresh = false
-			screen.Clear()
-			screen.MoveTopLeft()
-			color.Bold.Println("Goverlay First Time Setup")
-			color.Println("Set Client Log Location:")
-			color.Printf("%s\n\n", status)
-
-			switch Selected % 3 {
-			case 0:
-				color.FgBlack.Println(color.BgWhite.Render("Lunar Client (1.8)"))
-				color.Println("Minecraft Launcher")
-				color.Println("Badlion Client")
-				break
-			case 1:
-				color.Println("Lunar Client (1.8)")
-				color.FgBlack.Println(color.BgWhite.Render("Minecraft Launcher"))
-				color.Println("Badlion Client")
-				break
-			case 2:
-				color.Println("Lunar Client (1.8)")
-				color.Println("Minecraft Launcher")
-				color.FgBlack.Println(color.BgWhite.Render("Badlion Client"))
-				break
-			}
-
-			color.Println("\nUse arrow keys (up, down) to select (enter)")
-
-			if Enter {
-				home, _ := os.UserHomeDir()
-				switch Selected % 3 {
-				case 0:
-					file.Path = home + "\\.lunarclient\\offline\\1.8\\logs\\latest.log"
-					_, err := os.ReadFile(file.Path)
-					if err != nil {
-						status = "Lunar location not valid"
-						Enter = false
-						continue
-					}
-					break
-				case 1:
-					file.Path = home + "\\AppData\\Roaming\\.minecraft\\logs\\latest.log"
-					_, err := os.ReadFile(file.Path)
-					if err != nil {
-						status = "Minecraft location not valid"
-						Enter = false
-						continue
-					}
-					break
-				case 2:
-					file.Path = home + "\\AppData\\Roaming\\.minecraft\\logs\\blclient\\minecraft\\latest.log" // ???
-					_, err := os.ReadFile(file.Path)
-					if err != nil {
-						status = "Badlion location not valid"
-						Enter = false
-						global.Refresh()
-						continue
-					}
-					break
-				}
-				finished = true
-				// todo set
-				break
-			}
-		}
-		time.Sleep(50 * time.Millisecond)
-	}
-
-	finished, Enter, selecting, scanInt = false, false, false, true
-	global.Refresh()
-
-	for !finished { // refresh time
-		if global.NeedRefresh {
-			global.NeedRefresh = false
-			screen.Clear()
-			screen.MoveTopLeft()
-			color.Bold.Println("Goverlay First Time Setup")
-			color.Printf("Set Refresh Time (based on PC specs, 50 is recommended):%s\n", str)
-		}
-
-		if Enter {
-			e, _ := strconv.Atoi(str)
-			global.RefreshTime = e
-			// todo set
-			finished = true
-			break
-		}
-
-		time.Sleep(50 * time.Millisecond)
-	}
-	scanInt = false
-	file.InitConfig(api.Key, global.RefreshTime, file.Path)
-}
-
-func SetDir() {
-	finished := false
-	global.Refresh()
-	selecting = true
-	for !finished { // config directory
-		if global.NeedRefresh {
-			global.NeedRefresh = false
-			screen.Clear()
-			screen.MoveTopLeft()
-			color.Bold.Println("Goverlay First Time Setup")
-			color.Println("Set Client Log Location:")
-			color.Printf("%s\n\n", status)
-
-			switch Selected % 3 {
-			case 0:
-				color.FgBlack.Println(color.BgWhite.Render("Lunar Client (1.8)"))
-				color.Println("Minecraft Launcher")
-				color.Println("Badlion Client")
-				break
-			case 1:
-				color.Println("Lunar Client (1.8)")
-				color.FgBlack.Println(color.BgWhite.Render("Minecraft Launcher"))
-				color.Println("Badlion Client")
-				break
-			case 2:
-				color.Println("Lunar Client (1.8)")
-				color.Println("Minecraft Launcher")
-				color.FgBlack.Println(color.BgWhite.Render("Badlion Client"))
-				break
-			}
-
-			color.Println("\nUse arrow keys (up, down) to select (enter)")
-
-			if Enter {
-				home, _ := os.UserHomeDir()
-				switch Selected % 3 {
-				case 0:
-					file.Path = home + "\\.lunarclient\\offline\\1.8\\logs\\latest.log"
-					_, err := os.ReadFile(file.Path)
-					if err != nil {
-						status = "Lunar location not valid"
-						Enter = false
-						continue
-					}
-					break
-				case 1:
-					file.Path = home + "\\AppData\\Roaming\\.minecraft\\logs\\latest.log"
-					_, err := os.ReadFile(file.Path)
-					if err != nil {
-						status = "Minecraft location not valid"
-						Enter = false
-						continue
-					}
-					break
-				case 2:
-					file.Path = home + "\\AppData\\Roaming\\.minecraft\\logs\\blclient\\minecraft\\latest.log" // ???
-					_, err := os.ReadFile(file.Path)
-					if err != nil {
-						status = "Badlion location not valid"
-						Enter = false
-						global.Refresh()
-						continue
-					}
-					break
-				}
-				finished = true
-				// todo set
-				break
-			}
-		}
-		time.Sleep(50 * time.Millisecond)
-	}
 }

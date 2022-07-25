@@ -7,6 +7,7 @@ import (
 	"io"
 	"math"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -74,7 +75,9 @@ func GetStats(name string) {
 		handle(name, err, player)
 		return
 	}
-	// keycheck
+	if strings.Contains(string(hypixelJSON), `"player":null}`) {
+		handle(name, nil, player)
+	}
 	success, _ := json.GetBoolean(hypixelJSON)
 	if !success {
 		cause, _ := json.GetString(hypixelJSON, "cause")
@@ -154,8 +157,10 @@ func GetStats(name string) {
 }
 
 func handle(name string, err error, player Player) {
-	color.Println("Failed " + name)
-	color.Red.Println(err.Error())
+	if global.Debug {
+		color.Println("Failed " + name)
+		color.Red.Println(err.Error())
+	}
 	addNicked(player)
 	removeLoading(player)
 }

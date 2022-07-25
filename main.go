@@ -7,20 +7,18 @@ import (
 	"time"
 )
 
-func init() {
+func main() {
 	go ui.KeyPressEvent()
 	time.Sleep(100 * time.Millisecond)
-	if !file.FirstRun() {
-		ui.WinSetup()
+	if file.FirstRun() {
+		file.InitConfig("", 50, file.FindDir())
 	}
 	v := file.ReadConfig()
 	b := api.CheckKey()
 	if v && b {
 		api.ValidKey = true
 	}
-}
-
-func main() {
 	go ui.Draw()
+	go api.Moderate()
 	file.InitLogReading()
 }

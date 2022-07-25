@@ -1,6 +1,9 @@
 package api
 
-import "Goverlay/global"
+import (
+	"Goverlay/global"
+	"time"
+)
 
 var (
 	LoadingList []Player
@@ -91,4 +94,17 @@ func inNicked(player Player) bool {
 func Nuke() {
 	NickedList, PlayerList, LoadingList = []Player{}, []Player{}, []Player{}
 	global.Refresh()
+}
+
+func Moderate() {
+	for {
+		for _, player := range LoadingList {
+			for _, p := range PlayerList {
+				if p.Name == player.Name {
+					GetStats(p.Name)
+				}
+			}
+		}
+		time.Sleep(10 * time.Second)
+	}
 }
