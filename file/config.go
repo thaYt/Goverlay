@@ -28,11 +28,10 @@ func InitConfig(key string, time int, dir string) {
 	var e []string
 	e = append(e, "key="+key)
 	e = append(e, "refreshTime="+strconv.Itoa(time))
-	e = append(e, "dir="+dir)
-	e = append(e, "customdir="+"\r\n")
+	e = append(e, "dir="+dir+"\r\n")
 	os.Mkdir(config+"/goverlay", 0777)
-	if os.WriteFile(confFile, []byte(strings.Join(e, "\r\n")), 0777) != nil {
-		// idk man
+	if err := os.WriteFile(confFile, []byte(strings.Join(e, "\r\n")), 0777); err != nil {
+		panic(err)
 	}
 }
 
@@ -54,11 +53,8 @@ func ReadConfig() bool {
 		global.RefreshTime = 50
 	}
 
-	if len(log[3]) > 10 {
-		Path = log[3][10:]
-	} else {
-		Path = log[2][4:]
-	}
+	Path = log[2][4:]
+	
 	return true
 }
 
@@ -72,7 +68,7 @@ func SetKey(key string) {
 			a = append(a, "key="+key)
 			continue
 		}
-		if c == "\r\n" || c == "\n" || b > 4 {
+		if c == "\r\n" || c == "\n" || b > 3 {
 			continue
 		}
 		a = append(a, c)
@@ -91,7 +87,7 @@ func SetDir(dir string) {
 			a = append(a, "dir="+dir)
 			continue
 		}
-		if c == "\r\n" || c == "\n" || b > 4 {
+		if c == "\r\n" || c == "\n" || b > 3 {
 			continue
 		}
 		a = append(a, c)
@@ -143,8 +139,6 @@ func FindDir() string {
 			return dirs[i].time > dirs[j].time
 		})
 		return dirs[0].filename
-	case "darwin":
-		// might do eventually, not in to/do
 	case "linux":
 		var dirs []dir
 		mcLogfile, err := os.Stat(home + "/.minecraft/logs/latest.log")

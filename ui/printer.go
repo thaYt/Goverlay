@@ -17,7 +17,6 @@ var (
 	ph        int
 	headerLen int
 	header    string
-	Selected  int
 	Layout    = []string{
 		"-lv",
 		"-n",
@@ -42,7 +41,7 @@ func Draw() {
 		if global.NeedRefresh {
 			screen.Clear()
 			screen.MoveTopLeft()
-			title := "┏ " + color.Bold.Render("Goverlay v" + strconv.FormatFloat(global.Version, 'f', -1, 64)) + " ━ " + color.Green.Render(strconv.Itoa(len(api.CacheList))+" cached ")
+			title := "┏ " + color.Bold.Render("Goverlay v"+strconv.FormatFloat(global.Version, 'f', -1, 64)) + " ━ " + color.Green.Render(strconv.Itoa(len(api.CacheList))+" cached ")
 			if api.ValidKey {
 				title += "━ Key status: " + color.Bold.Render(color.Green.Render("VALID "))
 			} else {
@@ -125,10 +124,9 @@ func getHeaderData() {
 }
 
 func setFooter() {
-	footer := color.White.Text("┗") + getType() + strings.Repeat("━", pw-40-len(getType())) + " "
+	footer := color.White.Text("┗") + getType() + strings.Repeat("━", pw-32-len(getType())) + " "
 	footer += color.Gray.Text(color.OpUnderscore.Render("l")) + "ogfile ━ "
 	footer += color.Gray.Text(color.OpUnderscore.Render("c")) + "lear cache ━ "
-	footer += color.Gray.Text(color.OpUnderscore.Render("u")) + "pdate ━ "
 	footer += color.Gray.Text(color.OpUnderscore.Render("q")) + "uit"
 	color.Println(footer)
 }

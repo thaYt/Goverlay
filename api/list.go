@@ -104,6 +104,11 @@ func Moderate() {
 					GetStats(p.Name)
 				}
 			}
+			for _, p := range NickedList {
+				if p.Name == player.Name {
+					GetStats(p.Name)
+				}
+			}
 		}
 		time.Sleep(10 * time.Second)
 	}

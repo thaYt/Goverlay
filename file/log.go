@@ -73,13 +73,11 @@ func parseLines(line string) {
 		}
 	} else if strings.Contains(line, " has joined (") && strings.HasSuffix(line, ")!") || (strings.HasSuffix(line, "reconnected.") && !(strings.Contains(line, ":"))) {
 		go api.GetStats(strings.Split(line, " ")[0])
-	} else if strings.HasSuffix(line, "has quit!") {
-		go api.RemovePlayer(strings.Split(line, " ")[0])
-		go api.RemoveNicked(strings.Split(line, " ")[0])
 	} else if strings.Contains(line, "joined the lobby!") || strings.Contains(line, "Sending you to ") {
 		go api.Nuke()
 	} else if strings.HasSuffix(line, " has quit!") || strings.HasSuffix(line, "FINAL KILL!") || strings.HasSuffix(line, "disconnected.") {
-		go api.GetStats(strings.Split(line, " ")[0])
+		go api.RemovePlayer(strings.Split(line, " ")[0])
+		go api.RemoveNicked(strings.Split(line, " ")[0])
 	} else if strings.HasPrefix(line, "Your new API key") {
 		go SetKey(strings.Split(line, " ")[5])
 	}

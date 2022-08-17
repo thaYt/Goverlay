@@ -8,7 +8,6 @@ import (
 	"math"
 	"net/http"
 	"strings"
-	"time"
 )
 
 type Player struct {
@@ -138,6 +137,8 @@ func GetStats(name string) {
 	wlr := math.Round(float64(wins)/float64(losses)*100) / 100
 	bblr := math.Round(float64(beds)/float64(blost)*100) / 100
 
+	// todo check if infinite - or + and use 0 or numerator respectively
+
 	player.Level = int(level)
 	player.Rank = getRank(hypixelJSON)
 	player.Finals = int(finals)
@@ -175,10 +176,6 @@ func CheckKey() bool {
 			KDR = "INVALID"
 		} else if reason == "Key throttle" {
 			KDR = "THROTTLE"
-			go func() {
-				time.Sleep(5 * time.Second)
-				CheckKey()
-			}()
 		} else {
 			KDR = "UNKNOWN REASON"
 		}
